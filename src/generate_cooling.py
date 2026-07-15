@@ -5,25 +5,33 @@ import numpy as np
 import pandas as pd
 
 
-def generate_cooling_experiment() -> pd.DataFrame:
-    """Создает нормальный эксперимент охлаждения жидкости."""
+def generate_cooling_experiment(
+    initial_temperature: float = 85.0,
+    room_temperature: float = 22.0,
+    cooling_coefficient: float = 0.01,
+    duration_seconds: int = 600,
+    measurement_interval: int = 5,
+    noise_std: float = 0.25,
+    random_seed: int | None = None,
+) -> pd.DataFrame:
+    """Создает синтетический временной ряд охлаждения жидкости."""
 
-    initial_temperature = 85.0
-    room_temperature = 22.0
-    cooling_coefficient = 0.01
+    rng = np.random.default_rng(random_seed)
 
-    time = np.arange(0, 601, 5)
+    time = np.arange(
+        0,
+        duration_seconds + measurement_interval,
+        measurement_interval,
+    )
 
     ideal_temperature = room_temperature + (
         initial_temperature - room_temperature
     ) * np.exp(-cooling_coefficient * time)
 
-    rng = np.random.default_rng(42)
-
     measured_temperature = ideal_temperature + rng.normal(
-        0,
-        0.25,
-        len(time),
+        loc=0.0,
+        scale=noise_std,
+        size=len(time),
     )
 
     return pd.DataFrame(
@@ -37,38 +45,97 @@ def generate_cooling_experiment() -> pd.DataFrame:
 
 def add_single_outlier(
     experiment: pd.DataFrame,
-) -> tuple[pd.DataFrame, int]:
-    """Добавляет один резкий ошибочный скачок температуры."""
+    rng: np.random.Generator,
+) -> pd.DataFrame:
+    """Добавляет один резкий выброс датчика."""
 
     result = experiment.copy()
-    outlier_index = 45
+
+    outlier_index = int(
+        rng.integers(
+            low=15,
+            high=len(result) - 15,
+        )
+    )
+
+    outlier_value = float(
+        rng.choice([-1, 1]) * rng.uniform(4.0, 9.0)
+    )
 
     result.loc[
         outlier_index,
         "measured_temperature",
-    ] += 7.0
+    ] += outlier_value
 
-    result["is_anomaly"] = 0
-    result.loc[outlier_index, "is_anomaly"] = 1
+    return result
 
-    return result, outlier_index
+
+def add_sensor_drift(
+    experiment: pd.DataFrame,
+    rng: np.random.Generator,
+) -> pd.DataFrame:
+    """Добавляет постепенный дрейф показаний датчика."""
+
+    result = experiment.copy()
+
+    drift_start_index = int(
+        rng.integers(
+            low=35,
+            high=75,
+        )
+    )
+
+    drift_amplitude = float(
+        rng.uniform(2.5, 6.0)
+    )
+
+    drift = np.zeros(len(result))
+
+    drift[drift_start_index:] = np.linspace(
+        0.0,
+        drift_amplitude,
+        len(result) - drift_start_index,
+    )
+
+    result["measured_temperature"] += drift
+
+    return result
+
+
+def add_high_noise(
+    experiment: pd.DataFrame,
+    rng: np.random.Generator,
+) -> pd.DataFrame:
+    """Добавляет повышенный случайный шум датчика."""
+
+    result = experiment.copy()
+
+    additional_noise = rng.normal(
+        loc=0.0,
+        scale=rng.uniform(0.8, 1.8),
+        size=len(result),
+    )
+
+    result["measured_temperature"] += additional_noise
+
+    return result
 
 
 if __name__ == "__main__":
-    normal_experiment = generate_cooling_experiment()
+    rng = np.random.default_rng(42)
 
-    experiment_with_outlier, outlier_index = add_single_outlier(
-        normal_experiment
+    experiment = generate_cooling_experiment(
+        random_seed=42,
+    )
+
+    experiment_with_outlier = add_single_outlier(
+        experiment,
+        rng,
     )
 
     project_root = Path(__file__).resolve().parent.parent
     data_directory = project_root / "data"
     data_directory.mkdir(exist_ok=True)
-
-    normal_experiment.to_csv(
-        data_directory / "normal_cooling_experiment.csv",
-        index=False,
-    )
 
     experiment_with_outlier.to_csv(
         data_directory / "single_outlier_experiment.csv",
@@ -87,19 +154,9 @@ if __name__ == "__main__":
         label="Физическая модель",
     )
 
-    plt.scatter(
-        experiment_with_outlier.loc[outlier_index, "time_seconds"],
-        experiment_with_outlier.loc[
-            outlier_index,
-            "measured_temperature",
-        ],
-        label="Единичный выброс",
-        s=80,
-    )
-
     plt.xlabel("Время, с")
     plt.ylabel("Температура, °C")
-    plt.title("Охлаждение жидкости с ошибкой датчика")
+    plt.title("Охлаждение жидкости с единичным выбросом")
     plt.legend()
     plt.grid()
     plt.show()
