@@ -20,6 +20,9 @@ DEMO_FILES = {
     "Дрейф датчика": (
         DATA_DIRECTORY / "sensor_drift_experiment.csv"
     ),
+    "Повышенный шум": (
+        DATA_DIRECTORY / "high_noise_experiment.csv"
+    ),
 }
 
 
