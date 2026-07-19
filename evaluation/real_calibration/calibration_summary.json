@@ -1,0 +1,36 @@
+{
+  "calibration_version": "1.0",
+  "method": "real sensor noise calibrates shared synthetic device profiles",
+  "supervised_real_labels_used": false,
+  "reason": "Real experiments are retained as an external validation corpus because reliable ground-truth error labels are not available.",
+  "profile_source": "evaluation/real_data_integration/empirical_realism_profile.json",
+  "backup": "backups/pre_real_calibration/20260719_125304",
+  "real_validation": {
+    "real_experiments_total": 36,
+    "real_predictions_successful": 35,
+    "mean_confidence": 0.9626723448581016,
+    "low_confidence_below_0_60": 0,
+    "predicted_class_counts": [
+      {
+        "lab_id": "boyle_mariotte",
+        "predicted_class": "normal",
+        "count": 4
+      },
+      {
+        "lab_id": "cooling",
+        "predicted_class": "sensor_drift",
+        "count": 5
+      },
+      {
+        "lab_id": "cooling",
+        "predicted_class": "single_outlier",
+        "count": 25
+      },
+      {
+        "lab_id": "isochoric",
+        "predicted_class": "temperature_sensor_lag",
+        "count": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+﻿source_archive,sensor_file,temperature_column,n_values,resolution_c,noise_sigma_c,outlier_fraction
+real_data_raw/sensor_noise/zenodo_15130001/Preprocessed.zip,SENSOR01_preprocessed.csv,temperature,155869.0,0.09999999999999964,0.03403751008752267,0.0005902392393612585
+real_data_raw/sensor_noise/zenodo_15130001/Preprocessed.zip,SENSOR02_preprocessed.csv,temperature,156835.0,0.09999999999999787,0.029378914878748354,0.000529218605540855
+real_data_raw/sensor_noise/zenodo_15130001/Preprocessed.zip,SENSOR03_preprocessed.csv,temperature,84444.0,0.09999999999999964,0.03025232053377526,8.289517313249017e-05
+real_data_raw/sensor_noise/zenodo_15130001/Preprocessed.zip,SENSOR04_preprocessed.csv,temperature,151168.0,0.09999999999999964,0.030792607108056685,6.6151566469093986e-06
+real_data_raw/sensor_noise/zenodo_15130001/Preprocessed.zip,SENSOR05_preprocessed.csv,temperature,31101.0,0.09999999999999964,0.029472503766079437,6.430661393524324e-05
+real_data_raw/sensor_noise/zenodo_15130001/Preprocessed.zip,SENSOR06_preprocessed.csv,temperature,156835.0,0.09999999999999964,0.032041815231341586,0.000682245672203271
+real_data_raw/sensor_noise/zenodo_15130001/Preprocessed.zip,SENSOR07_preprocessed.csv,temperature,156835.0,0.09999999999999964,0.0328770442262825,3.188063888800331e-05
+real_data_raw/sensor_noise/zenodo_15130001/Preprocessed.zip,SENSOR08_preprocessed.csv,temperature,156835.0,0.09999999999999964,0.03214896810113971,7.01374055536073e-05
+real_data_raw/sensor_noise/zenodo_15130001/Preprocessed.zip,SENSOR09_preprocessed.csv,temperature,32700.0,0.09999999999999964,0.03251884511079994,0.0003058103975535168

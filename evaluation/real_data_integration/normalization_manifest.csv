@@ -1,0 +1,5 @@
+﻿lab_id,rows,experiments,output_file,status
+boyle_mariotte,40,4,data/real_normalized/boyle_mariotte/real_experiments.csv,normalized
+isochoric,12,1,data/real_normalized/isochoric/real_experiments.csv,normalized
+cooling,3075,30,data/real_normalized/cooling/real_experiments.csv,normalized
+heat_balance,14,1,data/real_normalized/heat_balance/real_experiments.csv,normalized

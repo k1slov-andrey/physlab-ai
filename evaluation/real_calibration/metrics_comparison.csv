@@ -1,0 +1,5 @@
+lab_id,accuracy_before,accuracy_after,accuracy_change,macro_f1_before,macro_f1_after,macro_f1_change,validation_strategy,n_samples_after
+cooling,0.78125,0.78125,0.0,0.7831188384033912,0.7831188384033912,0.0,stratified_group_holdout,640
+boyle_mariotte,0.95625,0.95625,0.0,0.9561883899233296,0.9561883899233296,0.0,stratified_group_holdout,640
+isochoric,0.98125,0.98125,0.0,0.9812470698546648,0.9812470698546648,0.0,stratified_group_holdout,640
+heat_balance,0.89375,0.89375,0.0,0.8928532422372417,0.8928532422372417,0.0,stratified_group_holdout,640

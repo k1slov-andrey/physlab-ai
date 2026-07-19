@@ -1,0 +1,2 @@
+lab_id,best_model,accuracy,macro_f1,n_samples,n_features,validation_strategy,train_samples,test_samples,train_groups,test_groups
+boyle_mariotte,gradient_boosting,0.95625,0.9561883899233297,640,27,stratified_group_holdout,480,160,6,2

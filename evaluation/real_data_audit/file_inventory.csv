@@ -1,0 +1,13 @@
+﻿file,lab,extension,size_kb,modified_at,status,tables_found,error
+real_data_raw/boyle_mariotte/pasco_607/BoylesLawSampleData.spklab,boyle_mariotte,.spklab,73.79,2026-07-18T19:42:50,proprietary_source_file,0,
+real_data_raw/boyle_mariotte/pasco_607/Экспортированные данные.csv,boyle_mariotte,.csv,1.82,2026-07-18T19:51:33,read_successfully,1,
+real_data_raw/cooling/zenodo_5146090/Dataset_1_Cooling without PCM_600lph.xlsx,cooling,.xlsx,29.01,2026-07-18T19:31:15,read_successfully,1,
+real_data_raw/cooling/zenodo_5146090/Dataset_2_Cooling with PCM_600lph.xlsx,cooling,.xlsx,44.43,2026-07-18T19:31:16,read_successfully,1,
+real_data_raw/cooling/zenodo_5146090/Description.pdf,cooling,.pdf,458.02,2026-07-18T19:31:18,reference_document,0,
+real_data_raw/heat_balance/experiment_25/heat_balance_real_experiment_25.csv,heat_balance,.csv,1.58,2026-07-18T21:24:56,read_successfully,1,
+real_data_raw/isochoric/virginia_tech/isochoric_virginia_tech_real.csv,isochoric,.csv,1.5,2026-07-18T21:20:49,read_successfully,1,
+real_data_raw/references/NIST_ThermoML_link.txt,unknown,.txt,0.74,2026-07-18T21:26:45,text_reference_11_lines,0,
+real_data_raw/sensor_noise/zenodo_15130001/Preprocessed.zip,sensor_noise,.zip,5682.63,2026-07-18T19:37:00,archive_inspected,9,
+real_data_raw/sensor_noise/zenodo_15130001/Raw.zip,sensor_noise,.zip,4937.61,2026-07-18T19:36:52,archive_inspected,9,
+real_data_raw/sensor_noise/zenodo_15130001/experiment_actions.csv,sensor_noise,.csv,5.24,2026-07-18T19:37:30,read_successfully,1,
+real_data_raw/sensor_noise/zenodo_15130001/overview.csv,sensor_noise,.csv,72.15,2026-07-18T19:37:23,read_successfully,1,

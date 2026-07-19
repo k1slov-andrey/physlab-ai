@@ -1,0 +1,2 @@
+lab_id,best_model,accuracy,macro_f1,n_samples,n_features,validation_strategy,train_samples,test_samples,train_groups,test_groups
+isochoric,gradient_boosting,0.98125,0.9812470698546648,640,27,stratified_group_holdout,480,160,6,2

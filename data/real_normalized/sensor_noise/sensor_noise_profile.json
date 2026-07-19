@@ -1,0 +1,8 @@
+{
+  "source": "real DHT22 measurements",
+  "sensor_count": 9,
+  "temperature_resolution_c_median": 0.09999999999999964,
+  "temperature_noise_sigma_c_median": 0.032041815231341586,
+  "temperature_noise_sigma_c_q90": 0.03310913739853053,
+  "outlier_fraction_median": 8.289517313249017e-05
+}

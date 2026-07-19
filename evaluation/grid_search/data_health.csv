@@ -1,0 +1,5 @@
+lab_id,rows,features,classes,groups,missing_cells,duplicate_experiment_ids,raw_experiments,class_balance_ratio,current_model
+cooling,640,23,4,8,0,0,640,1.0,GradientBoostingClassifier
+boyle_mariotte,640,27,4,8,0,0,640,1.0,GradientBoostingClassifier
+isochoric,640,27,4,8,0,0,640,1.0,GradientBoostingClassifier
+heat_balance,640,27,4,8,0,0,640,1.0,RandomForestClassifier

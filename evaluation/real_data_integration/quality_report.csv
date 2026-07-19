@@ -1,0 +1,37 @@
+﻿lab_id,experiment_id,source_file,rows,required_rows,missing_required_columns,missing_cells,duplicate_rows,out_of_range_cells,monotonic_time,ready_for_model,status,notes
+boyle_mariotte,pasco_boyle_run_01,real_data_raw/boyle_mariotte/pasco_607/Экспортированные данные.csv,10,8,,0,0,0,True,True,ready,ok
+boyle_mariotte,pasco_boyle_run_02,real_data_raw/boyle_mariotte/pasco_607/Экспортированные данные.csv,10,8,,0,0,0,True,True,ready,ok
+boyle_mariotte,pasco_boyle_run_03,real_data_raw/boyle_mariotte/pasco_607/Экспортированные данные.csv,10,8,,0,0,0,True,True,ready,ok
+boyle_mariotte,pasco_boyle_run_04,real_data_raw/boyle_mariotte/pasco_607/Экспортированные данные.csv,10,8,,0,0,0,True,True,ready,ok
+isochoric,virginia_tech_closed_container_01,real_data_raw/isochoric/virginia_tech/isochoric_virginia_tech_real.csv,12,10,,0,0,0,True,True,ready,ok
+cooling,dataset_1_cooling_without_pcm_600lph_data_flowrate,real_data_raw/cooling/zenodo_5146090/Dataset_1_Cooling without PCM_600lph.xlsx,77,20,,0,0,0,True,True,ready,ok
+cooling,dataset_1_cooling_without_pcm_600lph_data_pressure,real_data_raw/cooling/zenodo_5146090/Dataset_1_Cooling without PCM_600lph.xlsx,77,20,,0,0,0,True,True,ready,ok
+cooling,dataset_1_cooling_without_pcm_600lph_data_t1,real_data_raw/cooling/zenodo_5146090/Dataset_1_Cooling without PCM_600lph.xlsx,77,20,,0,0,0,True,True,ready,ok
+cooling,dataset_1_cooling_without_pcm_600lph_data_t10,real_data_raw/cooling/zenodo_5146090/Dataset_1_Cooling without PCM_600lph.xlsx,77,20,,0,0,0,True,True,ready,ok
+cooling,dataset_1_cooling_without_pcm_600lph_data_t2,real_data_raw/cooling/zenodo_5146090/Dataset_1_Cooling without PCM_600lph.xlsx,77,20,,0,0,0,True,True,ready,ok
+cooling,dataset_1_cooling_without_pcm_600lph_data_t3,real_data_raw/cooling/zenodo_5146090/Dataset_1_Cooling without PCM_600lph.xlsx,77,20,,0,0,0,True,True,ready,ok
+cooling,dataset_1_cooling_without_pcm_600lph_data_t4,real_data_raw/cooling/zenodo_5146090/Dataset_1_Cooling without PCM_600lph.xlsx,77,20,,0,0,0,True,True,ready,ok
+cooling,dataset_1_cooling_without_pcm_600lph_data_t5,real_data_raw/cooling/zenodo_5146090/Dataset_1_Cooling without PCM_600lph.xlsx,77,20,,0,0,0,True,True,ready,ok
+cooling,dataset_1_cooling_without_pcm_600lph_data_t6,real_data_raw/cooling/zenodo_5146090/Dataset_1_Cooling without PCM_600lph.xlsx,77,20,,0,0,0,True,True,ready,ok
+cooling,dataset_1_cooling_without_pcm_600lph_data_t7,real_data_raw/cooling/zenodo_5146090/Dataset_1_Cooling without PCM_600lph.xlsx,77,20,,0,0,0,True,True,ready,ok
+cooling,dataset_1_cooling_without_pcm_600lph_data_t8,real_data_raw/cooling/zenodo_5146090/Dataset_1_Cooling without PCM_600lph.xlsx,77,20,,0,0,0,True,True,ready,ok
+cooling,dataset_1_cooling_without_pcm_600lph_data_t9,real_data_raw/cooling/zenodo_5146090/Dataset_1_Cooling without PCM_600lph.xlsx,77,20,,0,0,0,True,True,ready,ok
+cooling,dataset_1_cooling_without_pcm_600lph_data_t_ambient,real_data_raw/cooling/zenodo_5146090/Dataset_1_Cooling without PCM_600lph.xlsx,77,20,,0,0,0,True,True,ready,ok
+cooling,dataset_1_cooling_without_pcm_600lph_data_t_in,real_data_raw/cooling/zenodo_5146090/Dataset_1_Cooling without PCM_600lph.xlsx,77,20,,0,0,0,True,True,ready,ok
+cooling,dataset_1_cooling_without_pcm_600lph_data_t_out,real_data_raw/cooling/zenodo_5146090/Dataset_1_Cooling without PCM_600lph.xlsx,77,20,,0,0,0,True,True,ready,ok
+cooling,dataset_2_cooling_with_pcm_600lph_atlasiti_der_gie_pressure,real_data_raw/cooling/zenodo_5146090/Dataset_2_Cooling with PCM_600lph.xlsx,128,20,,0,0,0,True,True,ready,ok
+cooling,dataset_2_cooling_with_pcm_600lph_atlasiti_der_gie_t1,real_data_raw/cooling/zenodo_5146090/Dataset_2_Cooling with PCM_600lph.xlsx,128,20,,0,0,0,True,True,ready,ok
+cooling,dataset_2_cooling_with_pcm_600lph_atlasiti_der_gie_t10,real_data_raw/cooling/zenodo_5146090/Dataset_2_Cooling with PCM_600lph.xlsx,128,20,,0,0,0,True,True,ready,ok
+cooling,dataset_2_cooling_with_pcm_600lph_atlasiti_der_gie_t2,real_data_raw/cooling/zenodo_5146090/Dataset_2_Cooling with PCM_600lph.xlsx,128,20,,0,0,0,True,True,ready,ok
+cooling,dataset_2_cooling_with_pcm_600lph_atlasiti_der_gie_t3,real_data_raw/cooling/zenodo_5146090/Dataset_2_Cooling with PCM_600lph.xlsx,128,20,,0,0,0,True,True,ready,ok
+cooling,dataset_2_cooling_with_pcm_600lph_atlasiti_der_gie_t4,real_data_raw/cooling/zenodo_5146090/Dataset_2_Cooling with PCM_600lph.xlsx,128,20,,0,0,0,True,True,ready,ok
+cooling,dataset_2_cooling_with_pcm_600lph_atlasiti_der_gie_t5,real_data_raw/cooling/zenodo_5146090/Dataset_2_Cooling with PCM_600lph.xlsx,128,20,,0,0,0,True,True,ready,ok
+cooling,dataset_2_cooling_with_pcm_600lph_atlasiti_der_gie_t6,real_data_raw/cooling/zenodo_5146090/Dataset_2_Cooling with PCM_600lph.xlsx,128,20,,0,0,0,True,True,ready,ok
+cooling,dataset_2_cooling_with_pcm_600lph_atlasiti_der_gie_t7,real_data_raw/cooling/zenodo_5146090/Dataset_2_Cooling with PCM_600lph.xlsx,128,20,,0,0,0,True,True,ready,ok
+cooling,dataset_2_cooling_with_pcm_600lph_atlasiti_der_gie_t8,real_data_raw/cooling/zenodo_5146090/Dataset_2_Cooling with PCM_600lph.xlsx,128,20,,0,0,0,True,True,ready,ok
+cooling,dataset_2_cooling_with_pcm_600lph_atlasiti_der_gie_t9,real_data_raw/cooling/zenodo_5146090/Dataset_2_Cooling with PCM_600lph.xlsx,128,20,,0,0,0,True,True,ready,ok
+cooling,dataset_2_cooling_with_pcm_600lph_atlasiti_der_gie_t_ambient,real_data_raw/cooling/zenodo_5146090/Dataset_2_Cooling with PCM_600lph.xlsx,128,20,,0,0,0,True,True,ready,ok
+cooling,dataset_2_cooling_with_pcm_600lph_atlasiti_der_gie_t_in,real_data_raw/cooling/zenodo_5146090/Dataset_2_Cooling with PCM_600lph.xlsx,128,20,,0,0,0,True,True,ready,ok
+cooling,dataset_2_cooling_with_pcm_600lph_atlasiti_der_gie_t_out,real_data_raw/cooling/zenodo_5146090/Dataset_2_Cooling with PCM_600lph.xlsx,128,20,,0,0,0,True,True,ready,ok
+cooling,dataset_2_cooling_with_pcm_600lph_atlasiti_der_gie_t_pcm,real_data_raw/cooling/zenodo_5146090/Dataset_2_Cooling with PCM_600lph.xlsx,128,20,,0,0,0,True,True,ready,ok
+heat_balance,paperzz_calorimetry_01,real_data_raw/heat_balance/experiment_25/heat_balance_real_experiment_25.csv,14,20,,0,0,0,True,False,needs_review,нужно минимум 20 точек

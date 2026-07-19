@@ -1,0 +1,4 @@
+measurement_number,time_seconds,volume_ml,pressure_kpa,temperature_c,atmospheric_pressure_kpa
+1,0,80.0,101.5,22.1,101.3
+2,10,70.0,115.9,22.2,101.3
+3,20,60.0,134.8,22.2,101.3

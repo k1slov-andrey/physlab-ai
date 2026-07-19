@@ -1,0 +1,5 @@
+,high_noise,normal,sensor_drift,single_outlier
+high_noise,40,0,0,0
+normal,0,21,19,0
+sensor_drift,0,14,25,1
+single_outlier,1,2,1,36

@@ -1,0 +1,2 @@
+lab_id,best_model,accuracy,macro_f1,n_samples,n_features,validation_strategy,train_samples,test_samples,train_groups,test_groups
+heat_balance,random_forest,0.89375,0.8928532422372417,640,27,stratified_group_holdout,480,160,6,2

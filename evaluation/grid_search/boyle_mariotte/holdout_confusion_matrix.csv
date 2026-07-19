@@ -1,0 +1,5 @@
+,air_leak,normal,temperature_change,volume_measurement_error
+air_leak,36,4,0,0
+normal,3,37,0,0
+temperature_change,0,0,40,0
+volume_measurement_error,0,1,0,39

@@ -1,0 +1,15 @@
+﻿experiment_id,measurement_number,time_seconds,temperature_c,hot_mass_g,cold_mass_g,hot_initial_c,cold_initial_c,calorimeter_heat_capacity_j_k,material,source_file,data_origin
+paperzz_calorimetry_01,1,0.0,22.8,,,94.5,22.8,70.0,unknown,real_data_raw/heat_balance/experiment_25/heat_balance_real_experiment_25.csv,real
+paperzz_calorimetry_01,2,36.0,35.0,,,94.5,22.8,70.0,unknown,real_data_raw/heat_balance/experiment_25/heat_balance_real_experiment_25.csv,real
+paperzz_calorimetry_01,3,50.0,35.8,,,94.5,22.8,70.0,unknown,real_data_raw/heat_balance/experiment_25/heat_balance_real_experiment_25.csv,real
+paperzz_calorimetry_01,4,70.0,35.8,,,94.5,22.8,70.0,unknown,real_data_raw/heat_balance/experiment_25/heat_balance_real_experiment_25.csv,real
+paperzz_calorimetry_01,5,94.0,35.6,,,94.5,22.8,70.0,unknown,real_data_raw/heat_balance/experiment_25/heat_balance_real_experiment_25.csv,real
+paperzz_calorimetry_01,6,115.0,35.5,,,94.5,22.8,70.0,unknown,real_data_raw/heat_balance/experiment_25/heat_balance_real_experiment_25.csv,real
+paperzz_calorimetry_01,7,135.0,35.4,,,94.5,22.8,70.0,unknown,real_data_raw/heat_balance/experiment_25/heat_balance_real_experiment_25.csv,real
+paperzz_calorimetry_01,8,155.0,35.4,,,94.5,22.8,70.0,unknown,real_data_raw/heat_balance/experiment_25/heat_balance_real_experiment_25.csv,real
+paperzz_calorimetry_01,9,170.0,35.3,,,94.5,22.8,70.0,unknown,real_data_raw/heat_balance/experiment_25/heat_balance_real_experiment_25.csv,real
+paperzz_calorimetry_01,10,205.0,35.0,,,94.5,22.8,70.0,unknown,real_data_raw/heat_balance/experiment_25/heat_balance_real_experiment_25.csv,real
+paperzz_calorimetry_01,11,230.0,34.9,,,94.5,22.8,70.0,unknown,real_data_raw/heat_balance/experiment_25/heat_balance_real_experiment_25.csv,real
+paperzz_calorimetry_01,12,240.0,34.9,,,94.5,22.8,70.0,unknown,real_data_raw/heat_balance/experiment_25/heat_balance_real_experiment_25.csv,real
+paperzz_calorimetry_01,13,270.0,34.8,,,94.5,22.8,70.0,unknown,real_data_raw/heat_balance/experiment_25/heat_balance_real_experiment_25.csv,real
+paperzz_calorimetry_01,14,300.0,34.6,,,94.5,22.8,70.0,unknown,real_data_raw/heat_balance/experiment_25/heat_balance_real_experiment_25.csv,real

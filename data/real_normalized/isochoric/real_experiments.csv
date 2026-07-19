@@ -1,0 +1,13 @@
+﻿experiment_id,measurement_number,time_seconds,temperature_c,pressure_kpa,volume_ml,pressure_type,source_file,data_origin
+virginia_tech_closed_container_01,1,0.0,25.79,99.9,1000.0,absolute,real_data_raw/isochoric/virginia_tech/isochoric_virginia_tech_real.csv,real
+virginia_tech_closed_container_01,2,1.0,47.17,102.81,1000.0,absolute,real_data_raw/isochoric/virginia_tech/isochoric_virginia_tech_real.csv,real
+virginia_tech_closed_container_01,3,2.0,73.11,119.82,1000.0,absolute,real_data_raw/isochoric/virginia_tech/isochoric_virginia_tech_real.csv,real
+virginia_tech_closed_container_01,4,3.0,108.49,145.04,1000.0,absolute,real_data_raw/isochoric/virginia_tech/isochoric_virginia_tech_real.csv,real
+virginia_tech_closed_container_01,5,4.0,122.64,138.14,1000.0,absolute,real_data_raw/isochoric/virginia_tech/isochoric_virginia_tech_real.csv,real
+virginia_tech_closed_container_01,6,5.0,150.94,147.04,1000.0,absolute,real_data_raw/isochoric/virginia_tech/isochoric_virginia_tech_real.csv,real
+virginia_tech_closed_container_01,7,6.0,172.17,152.11,1000.0,absolute,real_data_raw/isochoric/virginia_tech/isochoric_virginia_tech_real.csv,real
+virginia_tech_closed_container_01,8,7.0,183.96,157.78,1000.0,absolute,real_data_raw/isochoric/virginia_tech/isochoric_virginia_tech_real.csv,real
+virginia_tech_closed_container_01,9,8.0,228.77,163.02,1000.0,absolute,real_data_raw/isochoric/virginia_tech/isochoric_virginia_tech_real.csv,real
+virginia_tech_closed_container_01,10,9.0,252.36,184.86,1000.0,absolute,real_data_raw/isochoric/virginia_tech/isochoric_virginia_tech_real.csv,real
+virginia_tech_closed_container_01,11,10.0,268.87,187.12,1000.0,absolute,real_data_raw/isochoric/virginia_tech/isochoric_virginia_tech_real.csv,real
+virginia_tech_closed_container_01,12,11.0,306.6,200.97,1000.0,absolute,real_data_raw/isochoric/virginia_tech/isochoric_virginia_tech_real.csv,real
