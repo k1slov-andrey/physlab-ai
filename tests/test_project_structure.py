@@ -23,10 +23,7 @@ def test_required_root_files_exist() -> None:
         ROOT / "requirements.txt",
         ROOT / "README.md",
         ROOT / "PROJECT_DESCRIPTION.md",
-        ROOT / "DATA_CARD.md",
-        ROOT / "MODEL_CARD.md",
-        ROOT / "AI_USAGE.md",
-        ROOT / "EVALUATION_REPORT.md",
+        ROOT / "TECHNICAL_APPENDIX.md",
         ROOT / "Dockerfile",
         ROOT / ".dockerignore",
     ]
