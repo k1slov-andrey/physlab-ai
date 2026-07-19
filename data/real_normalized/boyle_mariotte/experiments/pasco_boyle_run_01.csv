@@ -1,0 +1,11 @@
+﻿experiment_id,measurement_number,time_seconds,volume_ml,pressure_kpa,temperature_c,atmospheric_pressure_kpa,pressure_type,source_file,data_origin
+pasco_boyle_run_01,1,0.0,60,51.5,22.0,101.325,absolute,real_data_raw/boyle_mariotte/pasco_607/Экспортированные данные.csv,real
+pasco_boyle_run_01,2,8.5,55,56.6,22.0,101.325,absolute,real_data_raw/boyle_mariotte/pasco_607/Экспортированные данные.csv,real
+pasco_boyle_run_01,3,16.9,50,61.9,22.0,101.325,absolute,real_data_raw/boyle_mariotte/pasco_607/Экспортированные данные.csv,real
+pasco_boyle_run_01,4,24.4,45,68.8,22.0,101.325,absolute,real_data_raw/boyle_mariotte/pasco_607/Экспортированные данные.csv,real
+pasco_boyle_run_01,5,29.6,40,77.1,22.0,101.325,absolute,real_data_raw/boyle_mariotte/pasco_607/Экспортированные данные.csv,real
+pasco_boyle_run_01,6,34.9,35,88.3,22.0,101.325,absolute,real_data_raw/boyle_mariotte/pasco_607/Экспортированные данные.csv,real
+pasco_boyle_run_01,7,43.5,30,100.9,22.0,101.325,absolute,real_data_raw/boyle_mariotte/pasco_607/Экспортированные данные.csv,real
+pasco_boyle_run_01,8,52.5,25,123.0,22.0,101.325,absolute,real_data_raw/boyle_mariotte/pasco_607/Экспортированные данные.csv,real
+pasco_boyle_run_01,9,60.800000000000004,20,151.6,22.0,101.325,absolute,real_data_raw/boyle_mariotte/pasco_607/Экспортированные данные.csv,real
+pasco_boyle_run_01,10,102.7,15,198.2,22.0,101.325,absolute,real_data_raw/boyle_mariotte/pasco_607/Экспортированные данные.csv,real

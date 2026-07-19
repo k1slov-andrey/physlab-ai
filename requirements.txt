@@ -37,7 +37,7 @@ python-multipart==0.0.32
 referencing==0.37.0
 requests==2.34.2
 rpds-py==2026.6.3
-scikit-learn==1.9.0
+scikit-learn==1.8.0
 scipy==1.18.0
 six==1.17.0
 smmap==5.0.3
@@ -50,3 +50,4 @@ typing_extensions==4.16.0
 urllib3==2.7.0
 uvicorn==0.51.0
 websockets==16.1
+openpyxl==3.1.5

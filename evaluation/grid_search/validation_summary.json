@@ -1,0 +1,26 @@
+{
+  "created_at": "2026-07-19T12:56:25",
+  "grid_mode": "balanced",
+  "models_applied": 0,
+  "models_kept": 4,
+  "project_checks_passed": 12,
+  "project_checks_failed": 0,
+  "real_data_before": {
+    "quality_rows": 36,
+    "predictions": 36,
+    "successful_predictions": 35,
+    "manual_review": 1,
+    "mean_confidence": 0.9626723448581016,
+    "low_confidence_below_0_60": 0
+  },
+  "real_data_after": {
+    "quality_rows": 36,
+    "predictions": 36,
+    "successful_predictions": 35,
+    "manual_review": 1,
+    "mean_confidence": 0.9626723448581016,
+    "low_confidence_below_0_60": 0
+  },
+  "backup_dir": "backups/pre_grid_search/20260719_125358",
+  "note": "GridSearchCV is a hyperparameter search procedure; primary selection metric is Macro F1."
+}

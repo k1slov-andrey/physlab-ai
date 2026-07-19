@@ -1,0 +1,4 @@
+time_seconds,temperature_c,hot_mass_g,cold_mass_g,hot_initial_c,cold_initial_c,calorimeter_heat_capacity_j_k,material
+0,22.0,75.0,160.0,92.0,22.0,70.0,aluminum
+5,24.8,75.0,160.0,92.0,22.0,70.0,aluminum
+10,26.3,75.0,160.0,92.0,22.0,70.0,aluminum

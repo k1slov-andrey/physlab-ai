@@ -1,0 +1,12 @@
+PHysLab AI — аудит реальных данных
+
+Файлов найдено: 12
+Таблиц найдено: 25
+
+Оценка пригодности:
+- suitable: 21
+- partial: 3
+- not_ready: 1
+
+Инвентаризация: /Users/k1slov_love/PycharmProjects/PhysLab_AI_v3_realistic_full/evaluation/real_data_audit/file_inventory.csv
+Отчёт по таблицам: /Users/k1slov_love/PycharmProjects/PhysLab_AI_v3_realistic_full/evaluation/real_data_audit/table_report.csv

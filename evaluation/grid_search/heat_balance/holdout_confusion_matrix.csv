@@ -1,0 +1,5 @@
+,heat_loss,insufficient_mixing,mass_measurement_error,normal
+heat_loss,32,0,4,4
+insufficient_mixing,0,40,0,0
+mass_measurement_error,2,0,36,2
+normal,1,2,2,35

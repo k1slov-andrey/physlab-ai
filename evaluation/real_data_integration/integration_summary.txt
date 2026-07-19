@@ -1,0 +1,17 @@
+PhysLab AI — подготовка реальных данных завершена
+
+Нормализовано лабораторных наборов: 4
+Экспериментов сформировано: 36
+Готово для текущих моделей: 35
+Требует ручной проверки: 1
+Предсказаний текущих моделей выполнено: 35
+Профилей температурных датчиков: 9
+
+Нормализованные данные: /Users/k1slov_love/PycharmProjects/PhysLab_AI_v3_realistic_full/data/real_normalized
+Манифест: /Users/k1slov_love/PycharmProjects/PhysLab_AI_v3_realistic_full/evaluation/real_data_integration/normalization_manifest.csv
+Отчёт качества: /Users/k1slov_love/PycharmProjects/PhysLab_AI_v3_realistic_full/evaluation/real_data_integration/quality_report.csv
+Предсказания: /Users/k1slov_love/PycharmProjects/PhysLab_AI_v3_realistic_full/evaluation/real_data_integration/real_data_model_predictions.csv
+Профиль реалистичности: /Users/k1slov_love/PycharmProjects/PhysLab_AI_v3_realistic_full/evaluation/real_data_integration/empirical_realism_profile.json
+
+Исходные файлы real_data_raw не изменены.
+Реальные данные пока не добавлены в обучение: они сохранены как внешний корпус проверки.
