@@ -1,0 +1,5 @@
+actual_class,air_leak,normal,temperature_sensor_lag,volume_instability
+air_leak,40,0,0,0
+normal,0,40,0,0
+temperature_sensor_lag,0,1,39,0
+volume_instability,0,0,0,40

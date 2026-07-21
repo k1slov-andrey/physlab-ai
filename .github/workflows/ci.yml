@@ -18,10 +18,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@v4
 
       - name: Set up Python 3.13
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@v5
         with:
           python-version: "3.13"
           cache: pip
@@ -32,38 +32,24 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install -r requirements.txt -r requirements-dev.txt
+          python -m pip install -r requirements.txt
+          python -m pip install -r requirements-dev.txt
 
-      - name: Check Python environment
-        run: python environment_check.py
-
-      - name: Compile Python sources
-        run: python -m compileall -q app.py core labs tests environment_check.py
-
-      - name: Run automated tests
-        run: python -m pytest
-
-      - name: Check deployed model evaluation
-        run: python evaluate_deployed_models.py --check
-
-      - name: Verify project artifacts
-        run: python verify_project.py
+      - name: Run full project quality check
+        run: python quality_check.py
 
       - name: Build Docker image
         run: docker build -t physlab-ai:ci .
 
       - name: Start container
         run: |
-          docker run -d \
-            --name physlab-ai-ci \
-            -p 8501:8501 \
-            physlab-ai:ci
+          docker run -d             --name physlab-ai-ci             -p 8501:8501             physlab-ai:ci
 
       - name: Check Streamlit health
         shell: bash
         run: |
           for attempt in {1..30}; do
-            if curl --fail --silent http://127.0.0.1:8501/_stcore/health; then
+            if curl --fail --silent               http://127.0.0.1:8501/_stcore/health; then
               echo
               echo "PhysLab AI container is healthy."
               exit 0

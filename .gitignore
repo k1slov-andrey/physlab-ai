@@ -184,3 +184,6 @@ cython_debug/
 __pycache__/
 *.pyc
 .DS_Store
+# Local backups and one-off migration artifacts
+backups/
+*.bak

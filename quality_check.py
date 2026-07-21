@@ -30,12 +30,19 @@ def main() -> None:
             "labs",
             "tests",
             "environment_check.py",
+            "evaluate_deployed_models.py",
+            "build_data_science_report.py",
+            "verify_project.py",
         ],
     )
     run_step("Run automated tests", [python, "-m", "pytest"])
     run_step(
         "Check deployed model evaluation",
         [python, "evaluate_deployed_models.py", "--check"],
+    )
+    run_step(
+        "Check Data Science evidence",
+        [python, "build_data_science_report.py", "--check"],
     )
     run_step("Verify project artifacts", [python, "verify_project.py"])
     print("\nQuality check passed")

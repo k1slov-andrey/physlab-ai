@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
@@ -10,18 +11,23 @@ import pandas as pd
 
 from check_all_models import CASES
 from evaluate_deployed_models import build_summary, check_outputs
+from build_data_science_report import check_committed_outputs
 from core.lab_registry import list_labs
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 REQUIRED_ROOT_FILES = (
     "README.md",
-    "PROJECT_DESCRIPTION.md",
+    "PRODUCT.md",
     "TECHNICAL_APPENDIX.md",
     "requirements.txt",
     "requirements-dev.txt",
     "Dockerfile",
     "app.py",
+    "environment_check.py",
+    "evaluate_deployed_models.py",
+    "build_data_science_report.py",
+    "quality_check.py",
     ".github/workflows/ci.yml",
     "evaluation/final_model_summary.csv",
 )
@@ -40,6 +46,19 @@ REQUIRED_EVALUATION_FILES = (
     "deployed_model_predictions.csv",
 )
 EXPECTED_DATASET_ROLES = {"train", "validation", "test"}
+
+
+FORBIDDEN_TRACKED_PATHS = (
+    "backups/",
+    ".idea/",
+    ".venv/",
+    "__pycache__/",
+    ".pytest_cache/",
+)
+FORBIDDEN_TRACKED_FILES = {
+    "apply_v3_cleanup.py",
+    ".DS_Store",
+}
 
 
 @dataclass(frozen=True)
@@ -64,6 +83,54 @@ def check_root_files() -> CheckResult:
     return _check_required_files(
         (PROJECT_ROOT / relative for relative in REQUIRED_ROOT_FILES),
         "root files",
+    )
+
+
+def _tracked_repository_files() -> list[str]:
+    try:
+        completed = subprocess.run(
+            ["git", "ls-files"],
+            cwd=PROJECT_ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except (FileNotFoundError, subprocess.CalledProcessError):
+        return [
+            str(path.relative_to(PROJECT_ROOT))
+            for path in PROJECT_ROOT.rglob("*")
+            if path.is_file()
+            and ".git" not in path.parts
+            and ".venv" not in path.parts
+            and ".idea" not in path.parts
+        ]
+    return [line.strip() for line in completed.stdout.splitlines() if line.strip()]
+
+
+def check_repository_hygiene() -> CheckResult:
+    tracked = [
+        path
+        for path in _tracked_repository_files()
+        if (PROJECT_ROOT / path).exists()
+    ]
+    forbidden = sorted(
+        path
+        for path in tracked
+        if path in FORBIDDEN_TRACKED_FILES
+        or Path(path).name in FORBIDDEN_TRACKED_FILES
+        or any(path.startswith(prefix) for prefix in FORBIDDEN_TRACKED_PATHS)
+        or "/__pycache__/" in path
+    )
+    if forbidden:
+        return CheckResult(
+            "repository hygiene",
+            False,
+            "development-only artifacts are tracked: " + ", ".join(forbidden),
+        )
+    return CheckResult(
+        "repository hygiene",
+        True,
+        "no local backups, IDE state or cache files are tracked",
     )
 
 
@@ -186,6 +253,22 @@ def check_deployed_model_evaluation() -> CheckResult:
     )
 
 
+
+def check_data_science_evidence() -> CheckResult:
+    try:
+        check_committed_outputs()
+    except (Exception, SystemExit) as error:
+        return CheckResult(
+            "data science evidence",
+            False,
+            str(error),
+        )
+    return CheckResult(
+        "data science evidence",
+        True,
+        "EDA, model selection, uncertainty and reliability artifacts are current",
+    )
+
 def check_control_scenarios() -> CheckResult:
     failures: list[str] = []
     checked = 0
@@ -205,10 +288,11 @@ def check_control_scenarios() -> CheckResult:
 
 
 def run_checks() -> list[CheckResult]:
-    results = [check_root_files()]
+    results = [check_root_files(), check_repository_hygiene()]
     for lab in list_labs():
         results.extend(check_lab_artifacts(lab.lab_id))
     results.append(check_deployed_model_evaluation())
+    results.append(check_data_science_evidence())
     results.append(check_control_scenarios())
     return results
 

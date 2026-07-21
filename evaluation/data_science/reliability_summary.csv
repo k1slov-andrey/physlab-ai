@@ -1,0 +1,5 @@
+lab_id,test_samples,accepted_samples,rejected_samples,coverage,abstention_rate,overall_accuracy,overall_macro_f1,selective_accuracy,selective_macro_f1,errors_captured_by_abstention,total_errors,error_capture_rate,correct_predictions_rejected,accepted_status,ambiguous_status,out_of_distribution_status,single_severe_shift_rejection_rate,multifeature_shift_rejection_rate,stress_test_note
+boyle_mariotte,160,151,9,0.94375,0.05625,0.925,0.9254848019145716,0.9602649006622517,0.9598996655518395,6,12,0.5,3,151,8,1,1.0,1.0,deterministic_feature_range_stress_not_external_validation
+cooling,160,139,21,0.86875,0.13125,0.875,0.8758263341596674,0.9424460431654677,0.9372549019607843,12,20,0.6,9,139,21,0,1.0,1.0,deterministic_feature_range_stress_not_external_validation
+heat_balance,160,153,7,0.95625,0.04375,0.8875,0.8873103718967716,0.9019607843137255,0.9001508214001684,3,18,0.16666666666666666,4,153,7,0,1.0,1.0,deterministic_feature_range_stress_not_external_validation
+isochoric,160,160,0,1.0,0.0,0.99375,0.9937490232848882,0.99375,0.9937490232848882,0,1,0.0,0,160,0,0,1.0,1.0,deterministic_feature_range_stress_not_external_validation

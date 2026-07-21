@@ -7,5 +7,12 @@
   "test_samples": 160,
   "test_groups": 40,
   "split_strategy": "stratified_group_train_validation_test",
-  "evaluation_source": "deployed_model_on_saved_test_split"
+  "evaluation_source": "deployed_model_on_saved_test_split",
+  "feature_count": 27,
+  "class_labels": [
+    "air_leak",
+    "normal",
+    "temperature_sensor_lag",
+    "volume_instability"
+  ]
 }

@@ -21,11 +21,17 @@ def test_required_root_files_exist() -> None:
     required = [
         ROOT / "app.py",
         ROOT / "requirements.txt",
+        ROOT / "requirements-dev.txt",
         ROOT / "README.md",
-        ROOT / "PROJECT_DESCRIPTION.md",
+        ROOT / "PRODUCT.md",
         ROOT / "TECHNICAL_APPENDIX.md",
         ROOT / "Dockerfile",
         ROOT / ".dockerignore",
+        ROOT / "environment_check.py",
+        ROOT / "evaluate_deployed_models.py",
+        ROOT / "build_data_science_report.py",
+        ROOT / "quality_check.py",
+        ROOT / "verify_project.py",
     ]
 
     missing = [str(path.relative_to(ROOT)) for path in required if not path.is_file()]

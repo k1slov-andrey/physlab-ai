@@ -1,0 +1,17 @@
+lab_id,class_name,precision,recall,f1_score,support
+boyle_mariotte,air_leak,0.9230769230769231,0.9,0.9113924050632911,40
+boyle_mariotte,normal,0.8372093023255814,0.9,0.8674698795180723,40
+boyle_mariotte,temperature_change,1.0,1.0,1.0,40
+boyle_mariotte,volume_measurement_error,0.9473684210526315,0.9,0.9230769230769231,40
+cooling,high_noise,0.975609756097561,1.0,0.9876543209876543,40
+cooling,normal,0.75,0.825,0.7857142857142857,40
+cooling,sensor_drift,0.8157894736842105,0.775,0.7948717948717948,40
+cooling,single_outlier,0.972972972972973,0.9,0.935064935064935,40
+heat_balance,heat_loss,0.9142857142857143,0.8,0.8533333333333334,40
+heat_balance,insufficient_mixing,1.0,1.0,1.0,40
+heat_balance,mass_measurement_error,0.8461538461538461,0.825,0.8354430379746836,40
+heat_balance,normal,0.8043478260869565,0.925,0.8604651162790697,40
+isochoric,air_leak,1.0,1.0,1.0,40
+isochoric,normal,0.975609756097561,1.0,0.9876543209876543,40
+isochoric,temperature_sensor_lag,1.0,0.975,0.9873417721518988,40
+isochoric,volume_instability,1.0,1.0,1.0,40

@@ -1,0 +1,5 @@
+lab_id,lab_title,raw_measurements,experiments,median_points_per_experiment,min_points_per_experiment,max_points_per_experiment,feature_rows,model_features,generation_groups,classes,min_class_samples,max_class_samples,missing_model_values,duplicate_experiment_ids,duplicate_model_vectors
+boyle_mariotte,Закон Бойля — Мариотта,17624,640,27.0,20,35,640,27,160,4,160,160,0,0,0
+cooling,Нагревание и охлаждение,111804,640,174.0,121,229,640,23,160,4,160,160,0,0,0
+heat_balance,Тепловой баланс,60544,640,94.0,70,119,640,27,160,4,160,160,0,0,0
+isochoric,Изохорный процесс,34260,640,53.0,40,67,640,27,160,4,160,160,0,0,0
