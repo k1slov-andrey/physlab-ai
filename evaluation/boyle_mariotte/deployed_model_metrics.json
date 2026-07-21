@@ -1,0 +1,11 @@
+{
+  "lab_id": "boyle_mariotte",
+  "model_class": "RandomForestClassifier",
+  "accuracy": 0.925,
+  "balanced_accuracy": 0.9249999999999999,
+  "macro_f1": 0.9254848019145716,
+  "test_samples": 160,
+  "test_groups": 40,
+  "split_strategy": "stratified_group_train_validation_test",
+  "evaluation_source": "deployed_model_on_saved_test_split"
+}

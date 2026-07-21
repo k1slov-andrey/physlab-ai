@@ -1,0 +1,11 @@
+{
+  "lab_id": "heat_balance",
+  "model_class": "GradientBoostingClassifier",
+  "accuracy": 0.8875,
+  "balanced_accuracy": 0.8875,
+  "macro_f1": 0.8873103718967716,
+  "test_samples": 160,
+  "test_groups": 40,
+  "split_strategy": "stratified_group_train_validation_test",
+  "evaluation_source": "deployed_model_on_saved_test_split"
+}

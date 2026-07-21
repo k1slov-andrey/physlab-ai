@@ -1,2 +1,2 @@
-lab_id,best_model,accuracy,macro_f1,n_samples,n_features,validation_strategy,train_samples,test_samples,train_groups,test_groups
-isochoric,gradient_boosting,0.98125,0.9812470698546648,640,27,stratified_group_holdout,480,160,6,2
+lab_id,best_model,accuracy,balanced_accuracy,macro_f1,selection_validation_accuracy,selection_validation_balanced_accuracy,selection_validation_macro_f1,n_samples,n_features,validation_strategy,train_samples,validation_samples,test_samples,train_groups,validation_groups,test_groups
+isochoric,random_forest,0.99375,0.99375,0.9937490232848882,0.98125,0.98125,0.9812470698546647,640,27,stratified_group_train_validation_test,320,160,160,80,40,40

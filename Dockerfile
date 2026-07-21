@@ -17,6 +17,8 @@ RUN python -m pip install --upgrade pip \
 
 COPY . /app
 
+RUN python /app/environment_check.py
+
 RUN mkdir -p /app/.streamlit \
     && printf '%s\n' \
         '[server]' \

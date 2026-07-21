@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import io
+import re
 import zipfile
 from datetime import datetime
 from pathlib import Path
@@ -29,28 +30,12 @@ EXPECTED_CONCEPTS: dict[str, set[str]] = {
 
 
 CONCEPT_TOKENS: dict[str, tuple[str, ...]] = {
-    "pressure": (
-        "pressure",
-        "p_kpa",
-        "press",
-        "давление",
-        "кпа",
-        "kpa",
-    ),
-    "volume": (
-        "volume",
-        "v_ml",
-        "vol",
-        "объем",
-        "объём",
-        "мл",
-        "ml",
-    ),
+    "pressure": ("pressure", "p_kpa", "press", "давление", "кпа", "kpa"),
+    "volume": ("volume", "v_ml", "vol", "объем", "объём", "мл", "ml"),
     "temperature": (
         "temperature",
         "temp",
-        "t_c",
-        "t_k",
+        "thermo",
         "температура",
         "градус",
         "celsius",
@@ -70,17 +55,17 @@ CONCEPT_TOKENS: dict[str, tuple[str, ...]] = {
         "сек",
         "мин",
     ),
-    "mass": (
-        "mass",
-        "m_g",
-        "m_kg",
-        "масса",
-    ),
-    "humidity": (
-        "humidity",
-        "влажность",
-    ),
+    "mass": ("mass", "m_g", "m_kg", "масса"),
+    "humidity": ("humidity", "влажность"),
 }
+
+TEMPERATURE_COLUMN_PATTERNS = (
+    re.compile(r"(?:^|_)(?:temperature|temp|thermo|температура|темп)(?:_|$)"),
+    re.compile(r"^t_?(?:in|out|ambient|pcm|water|air|sample|body|hot|cold)$"),
+    re.compile(r"^t_?\d{1,3}$"),
+    re.compile(r"^sensor_?t_?\d*$"),
+)
+
 
 
 def normalize_text(value: Any) -> str:
@@ -103,13 +88,62 @@ def detect_lab(path: Path) -> str:
     return "unknown"
 
 
-def detect_concepts(columns: list[str]) -> set[str]:
-    text = " | ".join(normalize_text(column) for column in columns)
-    found: set[str] = set()
+def normalize_column_name(value: Any) -> str:
+    text = normalize_text(value).replace("°", "")
+    text = re.sub(r"[^a-zа-я0-9]+", "_", text, flags=re.IGNORECASE)
+    return text.strip("_")
 
-    for concept, tokens in CONCEPT_TOKENS.items():
-        if any(normalize_text(token) in text for token in tokens):
-            found.add(concept)
+
+def is_temperature_column(column: str) -> bool:
+    name = normalize_column_name(column)
+    exclusions = (
+        "time",
+        "date",
+        "pressure",
+        "press",
+        "flow",
+        "volume",
+        "humidity",
+        "mass",
+        "voltage",
+        "current",
+        "power",
+        "расход",
+        "давление",
+        "объем",
+        "объём",
+        "влажность",
+        "масса",
+    )
+    if any(token in name for token in exclusions):
+        return False
+    return any(pattern.search(name) for pattern in TEMPERATURE_COLUMN_PATTERNS)
+
+
+def contains_column_token(column_name: str, token: str) -> bool:
+    normalized_token = normalize_column_name(token)
+    if not normalized_token:
+        return False
+    return bool(
+        re.search(
+            rf"(?:^|_){re.escape(normalized_token)}(?:_|$)",
+            column_name,
+        )
+    )
+
+
+def detect_concepts(columns: list[str]) -> set[str]:
+    found: set[str] = set()
+    normalized_columns = [normalize_column_name(column) for column in columns]
+
+    for column, normalized in zip(columns, normalized_columns):
+        if is_temperature_column(column):
+            found.add("temperature")
+        for concept, tokens in CONCEPT_TOKENS.items():
+            if concept == "temperature":
+                continue
+            if any(contains_column_token(normalized, token) for token in tokens):
+                found.add(concept)
 
     return found
 

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import json
+
 import joblib
 import matplotlib.pyplot as plt
 import numpy as np
@@ -10,14 +12,20 @@ from sklearn.metrics import (
     classification_report,
     confusion_matrix,
 )
-from sklearn.model_selection import StratifiedGroupKFold, train_test_split
 
 from labs.common.artifacts import (
     get_lab_data_dir,
     get_lab_evaluation_dir,
     get_lab_model_dir,
 )
-from labs.common.model_training import evaluate_models, results_to_dataframe
+from labs.common.model_training import (
+    evaluate_models,
+    fit_selected_model,
+    results_to_dataframe,
+    score_model,
+)
+from labs.common.reliability import build_feature_profile, save_feature_profile
+from labs.common.splitting import build_split_manifest, split_train_validation_test
 
 
 NON_FEATURE_COLUMNS = {
@@ -31,61 +39,13 @@ NON_FEATURE_COLUMNS = {
 }
 
 
-def _split_dataset(
-    features_df: pd.DataFrame,
-    feature_columns: list[str],
-    target_column: str,
-    random_state: int,
-):
-    x = features_df[feature_columns]
-    y = features_df[target_column]
-
-    if (
-        "generation_group" in features_df.columns
-        and features_df["generation_group"].nunique() >= 4
-    ):
-        groups = features_df["generation_group"]
-        splitter = StratifiedGroupKFold(
-            n_splits=4,
-            shuffle=True,
-            random_state=random_state,
-        )
-        train_indices, test_indices = next(splitter.split(x, y, groups))
-        return (
-            x.iloc[train_indices],
-            x.iloc[test_indices],
-            y.iloc[train_indices],
-            y.iloc[test_indices],
-            "stratified_group_holdout",
-            groups.iloc[train_indices],
-            groups.iloc[test_indices],
-        )
-
-    x_train, x_test, y_train, y_test = train_test_split(
-        x,
-        y,
-        test_size=0.25,
-        stratify=y,
-        random_state=random_state,
-    )
-    return (
-        x_train,
-        x_test,
-        y_train,
-        y_test,
-        "stratified_random_holdout",
-        None,
-        None,
-    )
-
-
 def train_and_save(
     lab_id: str,
     features_df: pd.DataFrame,
     target_col: str = "class_name",
     id_col: str = "experiment_id",
     random_state: int = 42,
-):
+) -> dict[str, object]:
     excluded = NON_FEATURE_COLUMNS | {target_col, id_col}
     feature_cols = [
         column
@@ -96,41 +56,67 @@ def train_and_save(
     if not feature_cols:
         raise ValueError(f"No numeric model features found for {lab_id}")
 
-    (
-        x_train,
-        x_test,
-        y_train,
-        y_test,
-        validation_strategy,
-        train_groups,
-        test_groups,
-    ) = _split_dataset(
-        features_df,
-        feature_cols,
-        target_col,
-        random_state,
+    split = split_train_validation_test(
+        frame=features_df,
+        target_column=target_col,
+        group_column="generation_group",
+        random_state=random_state,
+        test_fraction=0.25,
+        validation_fraction=0.25,
     )
 
-    results, best = evaluate_models(
-        x_train,
-        x_test,
-        y_train,
-        y_test,
-        random_state,
+    x = features_df[feature_cols]
+    y = features_df[target_col]
+    x_train = x.iloc[split.train_index]
+    y_train = y.iloc[split.train_index]
+    x_validation = x.iloc[split.validation_index]
+    y_validation = y.iloc[split.validation_index]
+    x_test = x.iloc[split.test_index]
+    y_test = y.iloc[split.test_index]
+
+    candidate_results, selected = evaluate_models(
+        x_train=x_train,
+        x_validation=x_validation,
+        y_train=y_train,
+        y_validation=y_validation,
+        random_state=random_state,
     )
-    predictions = best.model.predict(x_test)
+
+    development_index = np.concatenate(
+        [split.train_index, split.validation_index]
+    )
 
     model_dir = get_lab_model_dir(lab_id)
     evaluation_dir = get_lab_evaluation_dir(lab_id)
     data_dir = get_lab_data_dir(lab_id)
 
-    joblib.dump(best.model, model_dir / "best_model.joblib")
+    inference_profile = build_feature_profile(x.iloc[development_index])
+    inference_profile["lab_id"] = lab_id
+    inference_profile["dataset_roles"] = ["train", "validation"]
+    save_feature_profile(
+        inference_profile,
+        model_dir / "inference_profile.json",
+    )
+
+    final_model = fit_selected_model(
+        model_name=selected.name,
+        features=x.iloc[development_index],
+        target=y.iloc[development_index],
+        random_state=random_state,
+    )
+    test_scores = score_model(final_model, x_test, y_test)
+    predictions = final_model.predict(x_test)
+
+    joblib.dump(final_model, model_dir / "best_model.joblib")
     joblib.dump(feature_cols, model_dir / "feature_names.joblib")
 
-    results_to_dataframe(results).to_csv(
+    candidate_frame = results_to_dataframe(candidate_results)
+    candidate_frame["selected"] = candidate_frame["model"].eq(selected.name)
+    candidate_frame.to_csv(
         evaluation_dir / "model_metrics.csv",
         index=False,
     )
+
     pd.DataFrame(
         classification_report(
             y_test,
@@ -160,7 +146,7 @@ def train_and_save(
     plt.close(figure)
 
     permutation = permutation_importance(
-        best.model,
+        final_model,
         x_test,
         y_test,
         scoring="f1_macro",
@@ -198,37 +184,91 @@ def train_and_save(
 
     holdout_df = pd.DataFrame(
         {
-            "row_index": x_test.index,
+            "row_index": split.test_index,
             "true_class": y_test.to_numpy(),
             "predicted_class": predictions,
         }
     )
-    if hasattr(best.model, "predict_proba"):
-        probabilities = best.model.predict_proba(x_test)
+    if "generation_group" in features_df.columns:
+        holdout_df["generation_group"] = features_df.iloc[
+            split.test_index
+        ]["generation_group"].to_numpy()
+    if hasattr(final_model, "predict_proba"):
+        probabilities = final_model.predict_proba(x_test)
         holdout_df["confidence"] = np.max(probabilities, axis=1)
     holdout_df.to_csv(
         evaluation_dir / "holdout_predictions.csv",
         index=False,
     )
 
+    split_manifest = build_split_manifest(
+        frame=features_df,
+        split=split,
+        target_column=target_col,
+        group_column="generation_group",
+    )
+    split_manifest.to_csv(
+        evaluation_dir / "split_manifest.csv",
+        index=False,
+    )
+
     features_df.to_csv(data_dir / "features.csv", index=False)
 
-    summary = {
+    group_column_available = "generation_group" in features_df.columns
+    summary: dict[str, object] = {
         "lab_id": lab_id,
-        "best_model": best.name,
-        "accuracy": best.accuracy,
-        "macro_f1": best.macro_f1,
+        "best_model": selected.name,
+        "accuracy": test_scores["accuracy"],
+        "balanced_accuracy": test_scores["balanced_accuracy"],
+        "macro_f1": test_scores["macro_f1"],
+        "selection_validation_accuracy": selected.accuracy,
+        "selection_validation_balanced_accuracy": selected.balanced_accuracy,
+        "selection_validation_macro_f1": selected.macro_f1,
         "n_samples": len(features_df),
         "n_features": len(feature_cols),
-        "validation_strategy": validation_strategy,
-        "train_samples": len(x_train),
-        "test_samples": len(x_test),
-        "train_groups": 0 if train_groups is None else train_groups.nunique(),
-        "test_groups": 0 if test_groups is None else test_groups.nunique(),
+        "validation_strategy": split.strategy,
+        "train_samples": len(split.train_index),
+        "validation_samples": len(split.validation_index),
+        "test_samples": len(split.test_index),
+        "train_groups": (
+            features_df.iloc[split.train_index]["generation_group"].nunique()
+            if group_column_available
+            else 0
+        ),
+        "validation_groups": (
+            features_df.iloc[split.validation_index]["generation_group"].nunique()
+            if group_column_available
+            else 0
+        ),
+        "test_groups": (
+            features_df.iloc[split.test_index]["generation_group"].nunique()
+            if group_column_available
+            else 0
+        ),
     }
     pd.DataFrame([summary]).to_csv(
         evaluation_dir / "summary.csv",
         index=False,
+    )
+
+    protocol = {
+        "model_selection": "Candidate model family selected on validation Macro F1.",
+        "final_fit": "Selected family fitted on train and validation partitions.",
+        "final_evaluation": "Test partition used once for the reported metrics.",
+        "split_strategy": split.strategy,
+        "group_definition": (
+            "Each generation group is one latent experimental setup. "
+            "It contains one counterfactual variant per target class generated "
+            "from the same random seed, device profile, environment profile "
+            "and base measurement plan."
+        ),
+        "random_state": random_state,
+        "test_fraction": 0.25,
+        "validation_fraction": 0.25,
+    }
+    (evaluation_dir / "evaluation_protocol.json").write_text(
+        json.dumps(protocol, ensure_ascii=False, indent=2),
+        encoding="utf-8",
     )
     return summary
 

@@ -1,0 +1,4 @@
+check,status,details
+required_structure,PASS,required files found
+python_compile,PASS,files=39
+control_scenarios_before_search,PASS, | heat_balance | [OK] normal                       -> normal                       0.993 | [OK] heat_loss                    -> heat_loss                    0.985 | [OK] mass_measurement_error       -> mass_measurement_error       0.932 | [OK] insufficient_mixing          -> insufficient_mixing          1.000 |  | Все контрольные сценарии распознаны корректно.

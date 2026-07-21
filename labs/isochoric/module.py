@@ -5,11 +5,12 @@ import pandas as pd
 
 from core.schemas import ModelPrediction
 from labs.common.pipeline import load_model_and_features
+from labs.common.reliability import predict_with_reliability
 from labs.common.realism import (
     choose_device_profile,
     choose_environment_profile,
     first_order_lag,
-    generation_group,
+    generation_family,
     linear_fit_r2,
     normalized_slope,
     quantize,
@@ -279,21 +280,27 @@ def generate_dataset(
     n_per_class: int = 220,
     seed: int = 42,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
+    if n_per_class < 1:
+        raise ValueError("n_per_class must be at least 1")
+
     rng = np.random.default_rng(seed)
     raw_parts: list[pd.DataFrame] = []
     feature_rows: list[dict] = []
     counter = 0
 
-    for class_name in CLASSES:
-        for local_index in range(n_per_class):
+    for family_index in range(n_per_class):
+        family_seed = int(rng.integers(0, 2_000_000_000))
+        n_points = int(rng.integers(40, 68))
+        group_name = generation_family("isochoric", family_index)
+
+        for class_name in CLASSES:
             counter += 1
             experiment_id = f"IS_{counter:05d}"
-            group_name = generation_group(local_index)
             experiment = simulate(
                 class_name=class_name,
                 experiment_id=experiment_id,
-                n_points=int(rng.integers(40, 68)),
-                seed=int(rng.integers(0, 2_000_000_000)),
+                n_points=n_points,
+                seed=family_seed,
                 group_name=group_name,
             )
             raw_parts.append(experiment)
@@ -304,6 +311,9 @@ def generate_dataset(
                     "class_name": class_name,
                     "generation_group": group_name,
                     "device_profile": str(experiment["device_profile"].iloc[0]),
+                    "environment_profile": str(
+                        experiment["environment_profile"].iloc[0]
+                    ),
                     "severity": float(experiment["severity"].iloc[0]),
                 }
             )
@@ -315,20 +325,9 @@ def generate_dataset(
 def predict(df: pd.DataFrame) -> ModelPrediction:
     model, feature_names = load_model_and_features("isochoric")
     features = extract_features(df)
-    matrix = pd.DataFrame(
-        [[features[name] for name in feature_names]],
-        columns=feature_names,
-    )
-    probabilities = model.predict_proba(matrix)[0]
-    classes = model.classes_
-    best_index = int(np.argmax(probabilities))
-    return ModelPrediction(
+    return predict_with_reliability(
         lab_id="isochoric",
-        predicted_class=str(classes[best_index]),
-        confidence=float(probabilities[best_index]),
-        probabilities={
-            str(class_name): float(probability)
-            for class_name, probability in zip(classes, probabilities)
-        },
+        model=model,
+        feature_names=feature_names,
         features=features,
     )

@@ -201,5 +201,11 @@ def normalized_slope(values: np.ndarray | Iterable[float]) -> float:
     return slope / scale
 
 
-def generation_group(index: int, total_groups: int = 8) -> str:
-    return f"group_{index % total_groups:02d}"
+def generation_family(lab_id: str, family_index: int) -> str:
+    if not lab_id or not lab_id.strip():
+        raise ValueError("lab_id must be a non-empty string")
+    if family_index < 0:
+        raise ValueError("family_index must be non-negative")
+
+    normalized_lab_id = lab_id.strip().lower().replace(" ", "_")
+    return f"{normalized_lab_id}_family_{family_index:04d}"

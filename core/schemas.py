@@ -20,6 +20,10 @@ class ModelPrediction:
     confidence: float
     probabilities: dict[str, float]
     features: dict[str, float] = field(default_factory=dict)
+    candidate_class: str | None = None
+    accepted: bool = True
+    reliability_status: str = "accepted"
+    reliability_warnings: list[str] = field(default_factory=list)
 
 @dataclass
 class ResearchFeedback:

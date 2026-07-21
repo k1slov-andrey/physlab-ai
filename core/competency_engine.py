@@ -1,17 +1,53 @@
+from __future__ import annotations
+
 from core.schemas import CompetencyScores, ModelPrediction
 
-def score_competencies(prediction: ModelPrediction, hypothesis_text: str, student_decision: str, conclusion_text: str) -> CompetencyScores:
-    hyp=3.0 if len(hypothesis_text.strip())>=40 else 2.0 if len(hypothesis_text.strip())>=15 else 1.0 if hypothesis_text.strip() else 0.0
-    conclusion=3.0 if len(conclusion_text.strip())>=70 else 2.0 if len(conclusion_text.strip())>=30 else 1.0 if conclusion_text.strip() else 0.0
-    decision=3.0 if student_decision in {"Повторить измерение","Проверить оборудование","Пересчитать и проверить единицы","Принять данные и обосновать вывод"} else 1.0
-    data_score=3.0 if prediction.confidence>=0.85 else 2.0 if prediction.confidence>=0.65 else 1.0
+
+VALID_DECISIONS = {
+    "Повторить измерение",
+    "Проверить оборудование",
+    "Пересчитать и проверить единицы",
+    "Принять данные и обосновать вывод",
+}
+
+
+def _text_score(text: str, medium_length: int, high_length: int) -> float:
+    length = len(text.strip())
+    if length >= high_length:
+        return 3.0
+    if length >= medium_length:
+        return 2.0
+    if length > 0:
+        return 1.0
+    return 0.0
+
+
+def score_competencies(
+    prediction: ModelPrediction,
+    hypothesis_text: str,
+    student_decision: str,
+    conclusion_text: str,
+) -> CompetencyScores:
+    hypothesis_score = _text_score(hypothesis_text, 15, 40)
+    conclusion_score = _text_score(conclusion_text, 30, 70)
+    decision_score = 3.0 if student_decision in VALID_DECISIONS else 1.0
+
+    if not prediction.accepted:
+        data_score = 1.0
+    elif prediction.confidence >= 0.85:
+        data_score = 3.0
+    elif prediction.confidence >= 0.65:
+        data_score = 2.0
+    else:
+        data_score = 1.0
+
     return CompetencyScores(
         research_question=2.0,
-        hypothesis=hyp,
-        experiment_planning=decision,
+        hypothesis=hypothesis_score,
+        experiment_planning=decision_score,
         equipment_usage=2.0,
         data_analysis=data_score,
-        physics_interpretation=conclusion,
-        conclusion_argumentation=conclusion,
-        critical_ai_usage=decision,
+        physics_interpretation=conclusion_score,
+        conclusion_argumentation=conclusion_score,
+        critical_ai_usage=decision_score,
     )

@@ -1,5 +1,5 @@
-lab_id,best_model,accuracy,macro_f1,n_samples,n_features,validation_strategy,train_samples,test_samples,train_groups,test_groups
-cooling,gradient_boosting,0.78125,0.7831188384033912,640,23,stratified_group_holdout,480,160,6,2
-boyle_mariotte,gradient_boosting,0.95625,0.9561883899233297,640,27,stratified_group_holdout,480,160,6,2
-isochoric,gradient_boosting,0.98125,0.9812470698546648,640,27,stratified_group_holdout,480,160,6,2
-heat_balance,random_forest,0.89375,0.8928532422372417,640,27,stratified_group_holdout,480,160,6,2
+lab_id,best_model,accuracy,balanced_accuracy,macro_f1,selection_validation_accuracy,selection_validation_balanced_accuracy,selection_validation_macro_f1,n_samples,n_features,validation_strategy,train_samples,validation_samples,test_samples,train_groups,validation_groups,test_groups
+cooling,random_forest,0.9,0.9,0.901178553023683,0.8625,0.8625,0.8619843174025352,640,23,stratified_group_train_validation_test,320,160,160,80,40,40
+boyle_mariotte,random_forest,0.9375,0.9375,0.9380648763001704,0.9625,0.9624999999999999,0.9627970606629144,640,27,stratified_group_train_validation_test,320,160,160,80,40,40
+isochoric,random_forest,0.99375,0.99375,0.9937490232848882,0.98125,0.98125,0.9812470698546647,640,27,stratified_group_train_validation_test,320,160,160,80,40,40
+heat_balance,gradient_boosting,0.88125,0.88125,0.8810953752130223,0.8625,0.8625,0.8611805144884683,640,27,stratified_group_train_validation_test,320,160,160,80,40,40

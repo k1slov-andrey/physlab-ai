@@ -47,6 +47,7 @@ CLASS_LABELS = {
     "heat_loss": "Теплопотери",
     "mass_measurement_error": "Ошибка измерения массы",
     "insufficient_mixing": "Недостаточное перемешивание",
+    "unknown": "Надёжная гипотеза не сформирована",
 }
 
 COLUMN_LABELS = {
@@ -228,6 +229,18 @@ DIAGNOSTIC_GUIDANCE = {
             "Перемешайте смесь одинаковыми движениями.",
             "Дождитесь устойчивого участка температурной кривой.",
             "Зафиксируйте температуру после стабилизации, а не сразу после смешивания.",
+        ],
+    },
+    "unknown": {
+        "status": (
+            "Входные данные не позволяют надёжно выбрать одну диагностическую "
+            "гипотезу."
+        ),
+        "tone": "warning",
+        "checks": [
+            "Проверьте названия столбцов и единицы измерения.",
+            "Сопоставьте диапазоны значений с условиями лабораторной работы.",
+            "Повторите анализ после проверки данных или обратитесь к преподавателю.",
         ],
     },
 }
@@ -1144,6 +1157,9 @@ def render_diagnostic_panel(
     else:
         confidence_label = "Низкая"
 
+    if not getattr(prediction, "accepted", True):
+        confidence_label = "Недостаточная"
+
     metric_columns = st.columns(2)
     metric_columns[0].metric(
         "Определённость гипотезы",
@@ -1159,9 +1175,16 @@ def render_diagnostic_panel(
         (
             "Можно переходить к выводу"
             if predicted_class == "normal"
+            else "Нужно проверить данные и эксперимент"
+            if predicted_class == "unknown"
             else "Нужно проверить эксперимент"
         ),
     )
+
+    reliability_warnings = getattr(prediction, "reliability_warnings", [])
+    if reliability_warnings:
+        for warning in reliability_warnings:
+            st.warning(warning)
 
     st.caption(
         "В демонстрационном режиме сценарий задаётся заранее, поэтому "

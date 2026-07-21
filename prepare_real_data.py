@@ -73,6 +73,19 @@ class QualityRecord:
     notes: str
 
 
+@dataclass(frozen=True)
+class ColumnDecision:
+    column_name: str
+    normalized_name: str
+    accepted: bool
+    inferred_unit: str
+    numeric_values: int
+    unique_values: int
+    in_range_fraction: float
+    dynamic_range_c: float
+    reason: str
+
+
 def slugify(value: Any) -> str:
     text = str(value).strip().lower().replace("ё", "е")
     text = re.sub(r"[^a-zа-я0-9]+", "_", text, flags=re.IGNORECASE)
@@ -433,33 +446,147 @@ def normalize_heat_balance() -> pd.DataFrame:
 
 
 def select_time_column(frame: pd.DataFrame) -> str | None:
-    for column in frame.columns:
-        if any(token in column for token in ("time", "время", "second", "sec", "minute", "min", "hour")):
-            return column
+    priority_tokens = (
+        "time_seconds",
+        "elapsed_time",
+        "timestamp",
+        "datetime",
+        "time",
+        "время",
+        "second",
+        "sec",
+        "minute",
+        "min",
+        "hour",
+    )
+    for token in priority_tokens:
+        for column in frame.columns:
+            if token in slugify(column):
+                return str(column)
     return None
 
 
+TEMPERATURE_EXCLUSION_TOKENS = (
+    "time",
+    "date",
+    "pressure",
+    "press",
+    "flow",
+    "flowrate",
+    "rate",
+    "volume",
+    "humidity",
+    "mass",
+    "voltage",
+    "current",
+    "power",
+    "speed",
+    "расход",
+    "давление",
+    "объем",
+    "объём",
+    "влажность",
+    "масса",
+    "напряжение",
+)
+
+TEMPERATURE_NAME_PATTERNS = (
+    re.compile(r"(?:^|_)(?:temperature|temp|thermo|температура|темп)(?:_|$)"),
+    re.compile(r"^t_?(?:in|out|ambient|pcm|water|air|sample|body|hot|cold)$"),
+    re.compile(r"^t_?\d{1,3}$"),
+    re.compile(r"^sensor_?t_?\d*$"),
+)
+
+
+def infer_temperature_unit(column_name: str) -> str:
+    name = slugify(column_name)
+    if name.endswith("_k") or any(token in name for token in ("kelvin", "temp_k", "temperature_k")):
+        return "kelvin"
+    if name.endswith("_f") or any(token in name for token in ("fahrenheit", "temp_f", "temperature_f")):
+        return "fahrenheit"
+    return "celsius"
+
+
+def convert_temperature_to_celsius(series: pd.Series, unit: str) -> pd.Series:
+    values = numeric(series)
+    if unit == "kelvin":
+        return values - 273.15
+    if unit == "fahrenheit":
+        return (values - 32.0) * 5.0 / 9.0
+    return values
+
+
+def classify_temperature_column(
+    frame: pd.DataFrame,
+    column: str,
+    time_column: str | None,
+) -> ColumnDecision:
+    name = slugify(column)
+    if column == time_column or name.startswith("unnamed"):
+        return ColumnDecision(column, name, False, "unknown", 0, 0, 0.0, 0.0, "служебная или временная колонка")
+
+    if any(token in name for token in TEMPERATURE_EXCLUSION_TOKENS):
+        return ColumnDecision(column, name, False, "unknown", 0, 0, 0.0, 0.0, "название указывает на другую физическую величину")
+
+    name_matches = any(pattern.search(name) for pattern in TEMPERATURE_NAME_PATTERNS)
+    if not name_matches:
+        return ColumnDecision(column, name, False, "unknown", 0, 0, 0.0, 0.0, "нет явного признака температурного канала")
+
+    unit = infer_temperature_unit(name)
+    values = convert_temperature_to_celsius(frame[column], unit)
+    valid = values.dropna()
+    minimum_values = max(5, len(frame) // 5)
+    if len(valid) < minimum_values:
+        return ColumnDecision(column, name, False, unit, len(valid), int(valid.nunique()), 0.0, 0.0, "недостаточно числовых значений")
+
+    in_range_fraction = float(((valid >= -100.0) & (valid <= 200.0)).mean())
+    unique_values = int(valid.nunique())
+    dynamic_range = float(valid.max() - valid.min()) if len(valid) else 0.0
+
+    if in_range_fraction < 0.95:
+        reason = "значительная часть значений вне допустимого температурного диапазона"
+        accepted = False
+    elif unique_values < 4:
+        reason = "канал почти не изменяется"
+        accepted = False
+    else:
+        reason = "явный температурный канал с корректным числовым диапазоном"
+        accepted = True
+
+    return ColumnDecision(
+        column_name=column,
+        normalized_name=name,
+        accepted=accepted,
+        inferred_unit=unit,
+        numeric_values=int(len(valid)),
+        unique_values=unique_values,
+        in_range_fraction=in_range_fraction,
+        dynamic_range_c=dynamic_range,
+        reason=reason,
+    )
+
+
+def temperature_column_decisions(
+    frame: pd.DataFrame,
+    time_column: str | None,
+) -> list[ColumnDecision]:
+    return [
+        classify_temperature_column(frame, str(column), time_column)
+        for column in frame.columns
+    ]
+
+
 def plausible_temperature_columns(frame: pd.DataFrame, time_column: str | None) -> list[str]:
-    result: list[str] = []
-    for column in frame.columns:
-        if column == time_column or column.startswith("unnamed"):
-            continue
-        values = numeric(frame[column])
-        valid = values.dropna()
-        if len(valid) < max(5, len(frame) // 5):
-            continue
-        in_range_fraction = ((valid >= -100.0) & (valid <= 200.0)).mean()
-        variable = valid.nunique() >= 4
-        name_hint = any(
-            token in column
-            for token in ("temp", "temperature", "thermo", "t_", "sensor", "датчик", "темп")
-        )
-        if in_range_fraction >= 0.95 and variable and (name_hint or len(result) < 20):
-            result.append(column)
-    return result
+    return [
+        decision.column_name
+        for decision in temperature_column_decisions(frame, time_column)
+        if decision.accepted
+    ]
 
 
-def normalize_cooling() -> pd.DataFrame:
+def normalize_cooling(
+    column_report: list[dict[str, Any]] | None = None,
+) -> pd.DataFrame:
     candidates = sorted((RAW_DIR / "cooling").rglob("*.xlsx")) + sorted(
         (RAW_DIR / "cooling").rglob("*.xls")
     )
@@ -475,10 +602,25 @@ def normalize_cooling() -> pd.DataFrame:
             else:
                 time_seconds = infer_time_seconds(frame[time_column], time_column)
 
-            temperature_columns = plausible_temperature_columns(frame, time_column)
-            for temperature_column in temperature_columns:
-                temperature = numeric(frame[temperature_column])
-                sensor_id = slugify(temperature_column)
+            decisions = temperature_column_decisions(frame, time_column)
+            if column_report is not None:
+                for decision in decisions:
+                    column_report.append(
+                        {
+                            "source_file": str(path.relative_to(PROJECT_ROOT)),
+                            "sheet_name": str(sheet_name),
+                            **asdict(decision),
+                        }
+                    )
+
+            for decision in decisions:
+                if not decision.accepted:
+                    continue
+                temperature = convert_temperature_to_celsius(
+                    frame[decision.column_name],
+                    decision.inferred_unit,
+                )
+                sensor_id = slugify(decision.column_name)
                 experiment_id = slugify(f"{path.stem}_{sheet_name}_{sensor_id}")
                 condition = "with_pcm" if "with_pcm" in slugify(path.stem) else "without_pcm"
 
@@ -489,6 +631,8 @@ def normalize_cooling() -> pd.DataFrame:
                         "time_seconds": time_seconds,
                         "measured_temperature": temperature,
                         "sensor_id": sensor_id,
+                        "source_temperature_column": decision.column_name,
+                        "source_temperature_unit": decision.inferred_unit,
                         "condition": condition,
                         "source_file": str(path.relative_to(PROJECT_ROOT)),
                         "sheet_name": str(sheet_name),
@@ -556,14 +700,9 @@ def sensor_frames_from_zip(path: Path) -> list[tuple[str, pd.DataFrame]]:
 
 
 def find_temperature_column(frame: pd.DataFrame) -> str | None:
-    for column in frame.columns:
-        if any(token in column for token in ("temperature", "temp", "temperatur", "температура")):
-            return column
-    for column in frame.columns:
-        values = numeric(frame[column]).dropna()
-        if len(values) >= 20 and ((values >= -80) & (values <= 100)).mean() > 0.98:
-            return column
-    return None
+    decisions = temperature_column_decisions(frame, select_time_column(frame))
+    accepted = [decision.column_name for decision in decisions if decision.accepted]
+    return accepted[0] if len(accepted) == 1 else None
 
 
 def build_sensor_noise_profile() -> tuple[pd.DataFrame, dict[str, Any]]:
@@ -755,10 +894,11 @@ def main() -> None:
     for directory in LAB_OUTPUTS.values():
         directory.mkdir(parents=True, exist_ok=True)
 
+    cooling_column_report: list[dict[str, Any]] = []
     normalized = {
         "boyle_mariotte": normalize_boyle(),
         "isochoric": normalize_isochoric(),
-        "cooling": normalize_cooling(),
+        "cooling": normalize_cooling(cooling_column_report),
         "heat_balance": normalize_heat_balance(),
     }
 
@@ -807,11 +947,17 @@ def main() -> None:
     manifest_path = REPORT_DIR / "normalization_manifest.csv"
     quality_path = REPORT_DIR / "quality_report.csv"
     predictions_path = REPORT_DIR / "real_data_model_predictions.csv"
+    cooling_columns_path = REPORT_DIR / "cooling_column_selection.csv"
     calibration_path = REPORT_DIR / "empirical_realism_profile.json"
     summary_path = REPORT_DIR / "integration_summary.txt"
 
     manifest_df.to_csv(manifest_path, index=False, encoding="utf-8-sig")
     quality_df.to_csv(quality_path, index=False, encoding="utf-8-sig")
+    pd.DataFrame(cooling_column_report).to_csv(
+        cooling_columns_path,
+        index=False,
+        encoding="utf-8-sig",
+    )
 
     predictions_df = predict_real_experiments(normalized, quality_df)
     predictions_df.to_csv(predictions_path, index=False, encoding="utf-8-sig")
@@ -842,11 +988,18 @@ def main() -> None:
         else 0
     )
 
+    accepted_cooling_columns = sum(
+        bool(row["accepted"]) for row in cooling_column_report
+    )
+    rejected_cooling_columns = len(cooling_column_report) - accepted_cooling_columns
+
     lines = [
         "PhysLab AI — подготовка реальных данных завершена",
         "",
         f"Нормализовано лабораторных наборов: {(manifest_df['status'] == 'normalized').sum()}",
         f"Экспериментов сформировано: {len(quality_df)}",
+        f"Температурных каналов охлаждения принято: {accepted_cooling_columns}",
+        f"Колонок охлаждения отклонено: {rejected_cooling_columns}",
         f"Готово для текущих моделей: {ready_count}",
         f"Требует ручной проверки: {review_count}",
         f"Предсказаний текущих моделей выполнено: {successful_predictions}",
@@ -856,6 +1009,7 @@ def main() -> None:
         f"Манифест: {manifest_path}",
         f"Отчёт качества: {quality_path}",
         f"Предсказания: {predictions_path}",
+        f"Отчёт выбора температурных каналов: {cooling_columns_path}",
         f"Профиль реалистичности: {calibration_path}",
         "",
         "Исходные файлы real_data_raw не изменены.",

@@ -1,0 +1,10 @@
+{
+  "model_selection": "Candidate model family selected on validation Macro F1.",
+  "final_fit": "Selected family fitted on train and validation partitions.",
+  "final_evaluation": "Test partition used once for the reported metrics.",
+  "split_strategy": "stratified_group_train_validation_test",
+  "group_definition": "Each generation group is one latent experimental setup. It contains one counterfactual variant per target class generated from the same random seed, device profile, environment profile and base measurement plan.",
+  "random_state": 42,
+  "test_fraction": 0.25,
+  "validation_fraction": 0.25
+}
